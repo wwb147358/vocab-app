@@ -17,7 +17,8 @@ export function HomePage() {
     currentQuizId,
     setCurrentQuizId,
     currentDictationId,
-    setCurrentDictationId
+    setCurrentDictationId,
+    addWrongAnswer
   } = useVocab()
   const { recordAnswer } = useSpacedRepetition()
 
@@ -58,6 +59,9 @@ export function HomePage() {
     if (mode === 'flashcard') {
       await recordAnswer(currentVocab.id, correct)
       await refreshProgress()
+    } else if (!correct) {
+      // 测试和默写模式：答错时记录到错题本
+      addWrongAnswer(currentVocab)
     }
 
     // 移动到下一个（仅更新当前模式的索引）

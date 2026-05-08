@@ -4,6 +4,11 @@ import { parseVocabularyCSV } from '../lib/vocabulary'
 import { supabase } from '../lib/supabase'
 import { useAuth } from './AuthContext'
 
+interface WrongAnswer {
+  vocab: Vocabulary
+  timestamp: Date
+}
+
 interface VocabContextType {
   vocabularies: Vocabulary[]
   progress: Map<number, UserProgress>
@@ -15,6 +20,10 @@ interface VocabContextType {
   setCurrentQuizId: (id: number) => void
   currentDictationId: number
   setCurrentDictationId: (id: number) => void
+  wrongAnswers: WrongAnswer[]
+  addWrongAnswer: (vocab: Vocabulary) => void
+  removeWrongAnswer: (vocabId: number) => void
+  clearWrongAnswers: () => void
 }
 
 const VocabContext = createContext<VocabContextType | undefined>(undefined)
@@ -26,6 +35,7 @@ export function VocabProvider({ children }: { children: React.ReactNode }) {
   const [currentFlashcardId, setCurrentFlashcardId] = useState<number>(1)
   const [currentQuizId, setCurrentQuizId] = useState<number>(1)
   const [currentDictationId, setCurrentDictationId] = useState<number>(1)
+  const [wrongAnswers, setWrongAnswers] = useState<WrongAnswer[]>([])
   const { user } = useAuth()
 
   const refreshProgress = async () => {
@@ -44,6 +54,23 @@ export function VocabProvider({ children }: { children: React.ReactNode }) {
     setLoading(false)
   }
 
+  const addWrongAnswer = (vocab: Vocabulary) => {
+    setWrongAnswers(prev => {
+      // 如果已经存在，先移除
+      const filtered = prev.filter(w => w.vocab.id !== vocab.id)
+      // 添加到最前面，最多保留20条
+      return [{ vocab, timestamp: new Date() }, ...filtered].slice(0, 20)
+    })
+  }
+
+  const removeWrongAnswer = (vocabId: number) => {
+    setWrongAnswers(prev => prev.filter(w => w.vocab.id !== vocabId))
+  }
+
+  const clearWrongAnswers = () => {
+    setWrongAnswers([])
+  }
+
   useEffect(() => {
     refreshProgress()
   }, [user])
@@ -59,7 +86,11 @@ export function VocabProvider({ children }: { children: React.ReactNode }) {
       currentQuizId,
       setCurrentQuizId,
       currentDictationId,
-      setCurrentDictationId
+      setCurrentDictationId,
+      wrongAnswers,
+      addWrongAnswer,
+      removeWrongAnswer,
+      clearWrongAnswers
     }}>
       {children}
     </VocabContext.Provider>

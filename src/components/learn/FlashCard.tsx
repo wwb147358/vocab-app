@@ -11,11 +11,13 @@ export function FlashCard({ vocab, onAnswer }: FlashCardProps) {
 
   const handleFlipAndAnswer = (correct: boolean) => {
     setFlipped(true)
-    // 延迟2秒执行答题，以便用户看到答案
+    // 不认识：2秒后记录答案
+    // 认识：1秒后记录答案
+    const delay = correct ? 1000 : 2000
     setTimeout(() => {
       onAnswer(correct)
       setFlipped(false)
-    }, 2000)
+    }, delay)
   }
 
   return (

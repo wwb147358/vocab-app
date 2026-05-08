@@ -6,6 +6,7 @@ import { HomePage } from './pages/HomePage'
 import { ProgressPage } from './pages/ProgressPage'
 import { LibraryPage } from './pages/LibraryPage'
 import { ProfilePage } from './pages/ProfilePage'
+import { WrongAnswersPage } from './pages/WrongAnswersPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
@@ -40,6 +41,7 @@ function App() {
                     <Routes>
                       <Route path="/" element={<HomePage />} />
                       <Route path="/progress" element={<ProgressPage />} />
+                      <Route path="/wrong-answers" element={<WrongAnswersPage />} />
                       <Route path="/library" element={<LibraryPage />} />
                       <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
