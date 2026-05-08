@@ -1,8 +1,9 @@
-import Vocabulary from './vocabulary.csv?raw'
+import csvContent from './vocabulary.csv?raw'
+import type { Vocabulary } from '../types'
 
 export function parseVocabularyCSV(): Vocabulary[] {
-  const lines = Vocabulary.trim().split('\n')
-  return lines.map((line, index) => {
+  const lines = csvContent.trim().split('\n')
+  return lines.map((line: string, index: number) => {
     const [word, chinese, english_def] = line.split(',')
     return {
       id: index + 1,

@@ -17,8 +17,8 @@ export function LibraryPage() {
 
     if (filter === 'all') return true
     if (filter === 'new') return !p
-    if (filter === 'learning') return p && p.level > 0 && p.level < 4
-    if (filter === 'mastered') return p && p.level >= 4
+    if (filter === 'learning') return p && p.level > 0 && p.level < 3
+    if (filter === 'mastered') return p && p.level >= 3
 
     return true
   })
@@ -55,8 +55,8 @@ export function LibraryPage() {
       <div className="space-y-2">
         {filtered.map(v => {
           const p = progress.get(v.id)
-          const status = !p ? '新词' : p.level >= 4 ? '已掌握' : '学习中'
-          const statusColor = !p ? 'text-gray-500' : p.level >= 4 ? 'text-green-600' : 'text-yellow-600'
+          const status = !p ? '新词' : p.level >= 3 ? '已掌握' : '学习中'
+          const statusColor = !p ? 'text-gray-500' : p.level >= 3 ? 'text-green-600' : 'text-yellow-600'
 
           return (
             <div key={v.id} className="bg-white p-4 rounded-xl shadow">

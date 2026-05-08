@@ -6,15 +6,14 @@ const LEVEL_INTERVALS: Record<number, number> = {
   0: 0,                    // 新词 - 立即
   1: 1 * 24 * 60 * 60 * 1000,   // 1天
   2: 3 * 24 * 60 * 60 * 1000,   // 3天
-  3: 7 * 24 * 60 * 60 * 1000,   // 7天
-  4: 30 * 24 * 60 * 60 * 1000   // 30天
+  3: 30 * 24 * 60 * 60 * 1000    // 30天 - 已掌握
 }
 
 export function useSpacedRepetition() {
   const { user } = useAuth()
 
   const getNextReviewTime = useCallback((currentLevel: number): Date => {
-    const interval = LEVEL_INTERVALS[currentLevel + 1] || LEVEL_INTERVALS[4]
+    const interval = LEVEL_INTERVALS[currentLevel + 1] || LEVEL_INTERVALS[3]
     return new Date(Date.now() + interval)
   }, [])
 
@@ -29,7 +28,7 @@ export function useSpacedRepetition() {
       .single()
 
     if (correct) {
-      const newLevel = Math.min((existing?.level || 0) + 1, 4)
+      const newLevel = Math.min((existing?.level || 0) + 1, 3)
       const nextReview = getNextReviewTime(newLevel)
 
       if (existing) {

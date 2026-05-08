@@ -9,6 +9,12 @@ interface VocabContextType {
   progress: Map<number, UserProgress>
   loading: boolean
   refreshProgress: () => Promise<void>
+  currentFlashcardId: number
+  setCurrentFlashcardId: (id: number) => void
+  currentQuizId: number
+  setCurrentQuizId: (id: number) => void
+  currentDictationId: number
+  setCurrentDictationId: (id: number) => void
 }
 
 const VocabContext = createContext<VocabContextType | undefined>(undefined)
@@ -17,6 +23,9 @@ export function VocabProvider({ children }: { children: React.ReactNode }) {
   const [vocabularies] = useState<Vocabulary[]>(() => parseVocabularyCSV())
   const [progress, setProgress] = useState<Map<number, UserProgress>>(new Map())
   const [loading, setLoading] = useState(false)
+  const [currentFlashcardId, setCurrentFlashcardId] = useState<number>(1)
+  const [currentQuizId, setCurrentQuizId] = useState<number>(1)
+  const [currentDictationId, setCurrentDictationId] = useState<number>(1)
   const { user } = useAuth()
 
   const refreshProgress = async () => {
@@ -40,7 +49,18 @@ export function VocabProvider({ children }: { children: React.ReactNode }) {
   }, [user])
 
   return (
-    <VocabContext.Provider value={{ vocabularies, progress, loading, refreshProgress }}>
+    <VocabContext.Provider value={{
+      vocabularies,
+      progress,
+      loading,
+      refreshProgress,
+      currentFlashcardId,
+      setCurrentFlashcardId,
+      currentQuizId,
+      setCurrentQuizId,
+      currentDictationId,
+      setCurrentDictationId
+    }}>
       {children}
     </VocabContext.Provider>
   )

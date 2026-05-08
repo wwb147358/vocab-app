@@ -9,6 +9,15 @@ interface FlashCardProps {
 export function FlashCard({ vocab, onAnswer }: FlashCardProps) {
   const [flipped, setFlipped] = useState(false)
 
+  const handleFlipAndAnswer = (correct: boolean) => {
+    setFlipped(true)
+    // 延迟2秒执行答题，以便用户看到答案
+    setTimeout(() => {
+      onAnswer(correct)
+      setFlipped(false)
+    }, 2000)
+  }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh]">
       <div
@@ -31,8 +40,8 @@ export function FlashCard({ vocab, onAnswer }: FlashCardProps) {
       </div>
       <p className="text-gray-400 mt-4 text-sm">点击卡片查看答案</p>
       <div className="flex gap-4 mt-6">
-        <button onClick={() => onAnswer(false)} className="px-6 py-2 bg-red-100 text-red-600 rounded-lg">不认识</button>
-        <button onClick={() => onAnswer(true)} className="px-6 py-2 bg-green-100 text-green-600 rounded-lg">认识</button>
+        <button onClick={() => handleFlipAndAnswer(false)} className="px-6 py-2 bg-red-100 text-red-600 rounded-lg">不认识</button>
+        <button onClick={() => handleFlipAndAnswer(true)} className="px-6 py-2 bg-green-100 text-green-600 rounded-lg">认识</button>
       </div>
     </div>
   )

@@ -7,7 +7,7 @@ export function ProfilePage() {
   if (!user) {
     return (
       <div className="p-4">
-        <h1 className="text-2xl font-bold mb-6">我的</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">词汇学习</h1>
         <AuthForm />
       </div>
     )

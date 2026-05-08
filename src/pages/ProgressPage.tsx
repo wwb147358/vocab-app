@@ -5,12 +5,12 @@ export function ProgressPage() {
 
   const mastered = vocabularies.filter(v => {
     const p = progress.get(v.id)
-    return p && p.level >= 4
+    return p && p.level >= 3
   }).length
 
   const learning = vocabularies.filter(v => {
     const p = progress.get(v.id)
-    return p && p.level > 0 && p.level < 4
+    return p && p.level > 0 && p.level < 3
   }).length
 
   const newWords = vocabularies.length - mastered - learning
