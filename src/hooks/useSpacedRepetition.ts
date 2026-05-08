@@ -46,12 +46,12 @@ export function useSpacedRepetition() {
       if (existing) {
         await supabase
           .from('user_progress')
-          .update({ level: 1, correct_count: 0, last_reviewed: new Date().toISOString() })
+          .update({ level: 1, correct_count: 0, next_review: new Date().toISOString(), last_reviewed: new Date().toISOString() })
           .eq('id', existing.id)
       } else {
         await supabase
           .from('user_progress')
-          .insert({ user_id: user.id, vocab_id: vocabId, level: 0, correct_count: 0, last_reviewed: new Date().toISOString() })
+          .insert({ user_id: user.id, vocab_id: vocabId, level: 0, correct_count: 0, next_review: new Date().toISOString(), last_reviewed: new Date().toISOString() })
       }
     }
   }, [user, getNextReviewTime])
