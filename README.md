@@ -1,92 +1,127 @@
 # 词汇学习 App
 
-一款帮助大学生学习英语词汇的 PWA 应用。
+一款帮助大学生学习英语词汇的移动端 Web 应用。
 
-## 功能
+## 主要特点
 
-- 闪卡模式
-- 选择题测试
-- 默写练习
-- 间隔重复算法
-- 学习进度追踪
-- 云端同步
+### 1. 三种学习模式
+- **闪卡模式**：点击卡片翻转查看答案，认识/不认识按钮记录学习
+- **选择题模式**：4选1选择题，检测词汇理解
+- **默写模式**：根据中文提示输入英文单词，锻炼拼写能力
+
+### 2. 智能间隔重复算法
+- 新词：立即复习
+- 学习中（Lv.1-2）：1-3天后复习
+- 已掌握（Lv.3）：30天后复习
+- 连续答对3次即可掌握该词汇
+
+### 3. 错题本功能
+- 自动记录默写和选择题中的错题
+- 随时查看和复习错题
+- 点击"继续学习"将错题重新加入学习队列
+
+### 4. 学习进度追踪
+- 环形进度图展示掌握情况
+- 实时统计：新词/学习中/已掌握数量
+- 今日待复习提醒
+
+### 5. PWA 应用
+- 可添加到手机桌面
+- 支持离线浏览闪卡
+- 数据云端同步，换设备也能继续学习
 
 ## 技术栈
 
-- React 18 + TypeScript
-- Vite 5
-- TailwindCSS
-- Supabase (Auth + PostgreSQL)
-- PWA
+- **前端**：React 18 + TypeScript + Vite
+- **样式**：TailwindCSS
+- **后端**：Supabase（Auth + PostgreSQL）
+- **部署**：Vercel
 
-## 开发
+## 使用说明
 
-1. 复制环境变量配置文件：
-   ```bash
-   cp .env.example .env
-   ```
+### 注册与登录
+1. 打开应用，进入登录页面
+2. 点击"没有账户？注册"
+3. 输入邮箱和密码（至少6位）
+4. 注册后使用相同账号密码登录
 
-2. 填写 Supabase 配置：
-   - 在 [Supabase](https://supabase.com) 创建项目
-   - 获取 Project URL 和 anon public key
-   - 填入 .env 文件
+### 学习流程
+1. 登录后进入学习页面
+2. 选择学习模式（闪卡/测试/默写）
+3. 闪卡模式：点击"认识"或"不认识"记录学习
+4. 测试/默写模式：答题后自动记录错题
 
-3. 创建数据库表：
-   在 Supabase SQL Editor 中执行以下 SQL 创建 vocabularies 和 user_progress 表。
+### 查看进度
+- 点击底部"进度"查看学习统计
+- 环形图显示已掌握词汇比例
+- 了解新词、学习中、已掌握的数量
 
-   ```sql
-   -- 词汇表
-   CREATE TABLE vocabularies (
-     id SERIAL PRIMARY KEY,
-     word VARCHAR(100) NOT NULL,
-     chinese TEXT NOT NULL,
-     english_def TEXT,
-     created_at TIMESTAMP DEFAULT NOW()
-   );
+### 错题本
+- 点击底部"错题"查看所有错题
+- 点击"继续学习"将错题重新加入学习队列
 
-   -- 用户学习进度
-   CREATE TABLE user_progress (
-     id SERIAL PRIMARY KEY,
-     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-     vocab_id INTEGER REFERENCES vocabularies(id) ON DELETE CASCADE,
-     level INTEGER DEFAULT 0,
-     next_review TIMESTAMP,
-     correct_count INTEGER DEFAULT 0,
-     last_reviewed TIMESTAMP,
-     created_at TIMESTAMP DEFAULT NOW(),
-     UNIQUE(user_id, vocab_id)
-   );
+### 词库
+- 点击底部"词库"浏览所有词汇
+- 支持搜索功能
+- 可按状态筛选（新词/学习中/已掌握）
 
-   -- 启用行级安全
-   ALTER TABLE user_progress ENABLE ROW LEVEL SECURITY;
+## 数据库结构
 
-   -- 创建安全策略
-   CREATE POLICY "Users can manage own progress" ON user_progress
-     FOR ALL USING (auth.uid() = user_id);
-   ```
+### vocabularies（词汇表）
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | SERIAL | 主键 |
+| word | VARCHAR | 英文单词 |
+| chinese | TEXT | 中文释义 |
+| english_def | TEXT | 英文定义 |
 
-4. 安装依赖：
-   ```bash
-   npm install
-   ```
-
-5. 启动开发服务器：
-   ```bash
-   npm run dev
-   ```
+### user_progress（用户学习进度）
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | SERIAL | 主键 |
+| user_id | UUID | 用户ID |
+| vocab_id | INTEGER | 词汇ID |
+| level | INTEGER | 掌握等级（0-3） |
+| next_review | TIMESTAMP | 下次复习时间 |
+| correct_count | INTEGER | 连续正确次数 |
 
 ## 部署
 
-推荐部署到 Vercel 或 Netlify：
+项目已部署至 Vercel，访问地址：
+```
+https://www.se1dom.cloud
+```
+正常通过邮箱注册，通过验证后即可登录使用，如果注册异常，请使用账号
+邮箱：2120278356@qq.com
+密码：wwb20030719...
+
+##项目地址
+
+项目已经上传到github上，地址：
+https://github.com/wwb147358/vocab-app
+
+
+## 本地开发
 
 ```bash
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev
+
+# 构建生产版本
 npm run build
 ```
 
-构建产物在 `dist/` 目录。
+## 环境变量
 
-## PWA
+创建 `.env` 文件：
+```
+VITE_SUPABASE_URL=你的Supabase项目URL
+VITE_SUPABASE_ANON_KEY=你的Supabase anon key
+```
 
-- 可添加到桌面
-- 支持离线浏览闪卡
-- 进度同步需要网络
+## 作者
+
+wwb147358
